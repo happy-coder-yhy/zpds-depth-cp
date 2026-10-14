@@ -6,10 +6,10 @@
 
 ## 安装
 
-Python 3.10+，建议使用独立环境：
+Python 3.11+（Zarr 2.18.7 和 Numcodecs 0.15.1 的最低要求），建议使用独立环境：
 
 ```bash
-python -m pip install "git+https://github.com/happy-coder-yhy/zpds-depth-cp.git@v0.1.0"
+python -m pip install "git+https://github.com/happy-coder-yhy/zpds-depth-cp.git@v0.1.1"
 ```
 
 本地开发：
