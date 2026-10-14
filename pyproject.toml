@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zpds-depth-cp"
+version = "0.1.0"
+description = "Error-bounded S1 compression and decompression of metric float32 depth arrays"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "zpds-depth-cp contributors"}]
+dependencies = [
+    "numpy>=1.26,<3",
+    "zarr>=2.18.7,<3",
+    "numcodecs>=0.15.1,<0.16",
+    "pysz==1.0.3",
+]
+
+[project.urls]
+Repository = "https://github.com/happy-coder-yhy/zpds-depth-cp"
+Issues = "https://github.com/happy-coder-yhy/zpds-depth-cp/issues"
+
+[project.scripts]
+zpds-depth-cp = "zpds_depth_cp.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
