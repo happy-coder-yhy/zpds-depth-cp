@@ -1,0 +1,255 @@
+{
+  "description": "Depth compression results on public datasets",
+  "codec_id": "centerdepth.log_sz3.v1",
+  "prediction_model": "Fast-FoundationStereo",
+  "chunk_frames": 1,
+  "dtype": "float32",
+  "depth_unit": "meter",
+  "mib_bytes": 1048576,
+  "compression_ratio_definition": "Raw array element count * 4 / total compressed Zarr bytes, including metadata",
+  "mae_definition": "Arithmetic mean of per-image compression MAE from samples[*].storage[preset].mae_m; decoded depth compared with original prediction",
+  "datasets": [
+    {
+      "dataset": "FAT",
+      "split": "mixed",
+      "selection": "15 scene locations, first and middle frame per location",
+      "sample_count": 30,
+      "shape_per_sample_hw": [
+        450,
+        800
+      ],
+      "source_report_sha256": "c2ed60b7739a83d0f606219ba903ac8ae2ae020308f27c706bf5e30ef32a1d3b",
+      "raw_float32_bytes": 43200000,
+      "results": {
+        "S1": {
+          "alpha": 0.001,
+          "compressed_bytes": 2127959,
+          "compression_ratio": 20.301143020142774,
+          "mean_per_image_mae_m": 0.0006888632293553151,
+          "pixels_over_bound": 0,
+          "exact_bit_mismatches": 0
+        },
+        "S2": {
+          "alpha": 0.002,
+          "compressed_bytes": 1577180,
+          "compression_ratio": 27.390659277951787,
+          "mean_per_image_mae_m": 0.0011333581505319375,
+          "pixels_over_bound": 0,
+          "exact_bit_mismatches": 0
+        },
+        "S3": {
+          "alpha": 0.003,
+          "compressed_bytes": 1389608,
+          "compression_ratio": 31.08790392686283,
+          "mean_per_image_mae_m": 0.0016536005162417,
+          "pixels_over_bound": 0,
+          "exact_bit_mismatches": 0
+        }
+      },
+      "ground_truth": {
+        "ALL/all": {
+          "source_json_pointer": "/pooled/ALL~1all",
+          "reference_pixels": 10497196,
+          "evaluated_pixels": 10497027,
+          "raw_mae_m": 0.3198598264561794,
+          "results": {
+            "S1": {
+              "mae_m": 0.3198805175972566,
+              "mae_delta_m": 2.0691141077222586e-05
+            },
+            "S2": {
+              "mae_m": 0.31995186043976803,
+              "mae_delta_m": 9.203398358864634e-05
+            },
+            "S3": {
+              "mae_m": 0.3200704268896033,
+              "mae_delta_m": 0.0002106004334239131
+            }
+          }
+        },
+        "ALL/.5-1m": {
+          "source_json_pointer": "/pooled/ALL~1.5-1m",
+          "reference_pixels": 2225022,
+          "evaluated_pixels": 2225021,
+          "raw_mae_m": 0.02834019535324125,
+          "results": {
+            "S1": {
+              "mae_m": 0.028367713146041796,
+              "mae_delta_m": 2.751779280054517e-05
+            },
+            "S2": {
+              "mae_m": 0.02843560524294574,
+              "mae_delta_m": 9.540988970448833e-05
+            },
+            "S3": {
+              "mae_m": 0.028624547282163595,
+              "mae_delta_m": 0.00028435192892234396
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "Dynamic Replica",
+      "split": "valid",
+      "selection": "20 sequences, frames 0 and 150 per sequence",
+      "sample_count": 40,
+      "shape_per_sample_hw": [
+        450,
+        800
+      ],
+      "source_report_sha256": "cf7852be82bf91c4951dc4089be20309a60f0422f20518a847437d335709a537",
+      "raw_float32_bytes": 57600000,
+      "results": {
+        "S1": {
+          "alpha": 0.001,
+          "compressed_bytes": 2530486,
+          "compression_ratio": 22.762425873923032,
+          "mean_per_image_mae_m": 0.0009790085257441925,
+          "pixels_over_bound": 0,
+          "exact_bit_mismatches": 0
+        },
+        "S2": {
+          "alpha": 0.002,
+          "compressed_bytes": 1628282,
+          "compression_ratio": 35.37470782088115,
+          "mean_per_image_mae_m": 0.001661976828826748,
+          "pixels_over_bound": 0,
+          "exact_bit_mismatches": 0
+        },
+        "S3": {
+          "alpha": 0.003,
+          "compressed_bytes": 1290779,
+          "compression_ratio": 44.62421529944321,
+          "mean_per_image_mae_m": 0.0023012893856067486,
+          "pixels_over_bound": 0,
+          "exact_bit_mismatches": 0
+        }
+      },
+      "ground_truth": {
+        "ALL/all": {
+          "source_json_pointer": "/pooled/ALL~1all",
+          "reference_pixels": 14273460,
+          "evaluated_pixels": 14273457,
+          "raw_mae_m": 0.08526331099239608,
+          "results": {
+            "S1": {
+              "mae_m": 0.08528162297351846,
+              "mae_delta_m": 1.8311981122384746e-05
+            },
+            "S2": {
+              "mae_m": 0.08532587430098895,
+              "mae_delta_m": 6.256330859287507e-05
+            },
+            "S3": {
+              "mae_m": 0.08540006349612216,
+              "mae_delta_m": 0.0001367525037260786
+            }
+          }
+        },
+        "ALL/.5-1m": {
+          "source_json_pointer": "/pooled/ALL~1.5-1m",
+          "reference_pixels": 1197069,
+          "evaluated_pixels": 1197069,
+          "raw_mae_m": 0.008495867086417499,
+          "results": {
+            "S1": {
+              "mae_m": 0.00850243910508446,
+              "mae_delta_m": 6.572018666961901e-06
+            },
+            "S2": {
+              "mae_m": 0.008519761714078049,
+              "mae_delta_m": 2.389462766055027e-05
+            },
+            "S3": {
+              "mae_m": 0.008547777243676617,
+              "mae_delta_m": 5.1910157259117684e-05
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "Booster",
+      "split": "train/balanced",
+      "selection": "All 38 scenes, fixed im0 per scene",
+      "sample_count": 38,
+      "shape_per_sample_hw": [
+        585,
+        800
+      ],
+      "source_report_sha256": "ab7a6f5bca9227351b9fa07e149f806e514f9db6893a625ddbc796106c4313da",
+      "raw_float32_bytes": 71136000,
+      "results": {
+        "S1": {
+          "alpha": 0.001,
+          "compressed_bytes": 1671805,
+          "compression_ratio": 42.5504170641911,
+          "mean_per_image_mae_m": 0.00044399512487310093,
+          "pixels_over_bound": 0,
+          "exact_bit_mismatches": 0
+        },
+        "S2": {
+          "alpha": 0.002,
+          "compressed_bytes": 1044396,
+          "compression_ratio": 68.11209541208507,
+          "mean_per_image_mae_m": 0.0007643704422213944,
+          "pixels_over_bound": 0,
+          "exact_bit_mismatches": 0
+        },
+        "S3": {
+          "alpha": 0.003,
+          "compressed_bytes": 840610,
+          "compression_ratio": 84.6242609533553,
+          "mean_per_image_mae_m": 0.00107767327385791,
+          "pixels_over_bound": 0,
+          "exact_bit_mismatches": 0
+        }
+      },
+      "ground_truth": {
+        "ALL/all": {
+          "source_json_pointer": "/pooled_depth/ALL~1all",
+          "reference_pixels": 16988378,
+          "evaluated_pixels": 16987809,
+          "raw_mae_m": 1.7812114301380586,
+          "results": {
+            "S1": {
+              "mae_m": 1.7812299651095693,
+              "mae_delta_m": 1.85349715107197e-05
+            },
+            "S2": {
+              "mae_m": 1.7812993561744646,
+              "mae_delta_m": 8.792603640594976e-05
+            },
+            "S3": {
+              "mae_m": 1.7813722458885917,
+              "mae_delta_m": 0.00016081575053306096
+            }
+          }
+        },
+        "ALL/.5-1m": {
+          "source_json_pointer": "/pooled_depth/ALL~1.5-1m",
+          "reference_pixels": 7919951,
+          "evaluated_pixels": 7919951,
+          "raw_mae_m": 0.02452126248049423,
+          "results": {
+            "S1": {
+              "mae_m": 0.024537191549465587,
+              "mae_delta_m": 1.5929068971357735e-05
+            },
+            "S2": {
+              "mae_m": 0.02463400805114742,
+              "mae_delta_m": 0.0001127455706531888
+            },
+            "S3": {
+              "mae_m": 0.024720705647426403,
+              "mae_delta_m": 0.00019944316693217348
+            }
+          }
+        }
+      }
+    }
+  ],
+  "ground_truth_mae_definition": "MAE against ground truth, pooled by evaluated pixel count on the common valid ground-truth/prediction support; distance groups use ground-truth depth, all material classes included",
+  "ground_truth_delta_definition": "Decoded-depth MAE against ground truth minus original-prediction MAE against ground truth on the same pixel support"
+}
