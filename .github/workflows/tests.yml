@@ -18,7 +18,7 @@ jobs:
       - run: python -m pip check
       - run: python -m unittest discover -s tests -v
       - run: zpds-depth-cp --help
-      - name: Round-trip S1 depth
+      - name: Round-trip S1, S2 and S3 depth
         run: |
           python - <<'PY'
           import tempfile
@@ -29,8 +29,11 @@ jobs:
               root = Path(tmp)
               raw = np.linspace(0.01, 12, 4096, dtype='f4').reshape(1, 64, 64)
               np.save(root / 'raw.npy', raw)
-              compress(root / 'raw.npy', root / 'depth.zarr')
-              assert verify(root / 'raw.npy', root / 'depth.zarr')['passed']
-              decompress(root / 'depth.zarr', root / 'decoded.npy')
-              assert np.load(root / 'decoded.npy').shape == raw.shape
+              for preset in ('S1', 'S2', 'S3'):
+                  target = root / f'{preset}.zarr'
+                  compress(root / 'raw.npy', target, preset=preset)
+                  result = verify(root / 'raw.npy', target)
+                  assert result['passed'] and result['preset'] == preset
+                  decompress(target, root / f'{preset}.npy')
+                  assert np.load(root / f'{preset}.npy').shape == raw.shape
           PY

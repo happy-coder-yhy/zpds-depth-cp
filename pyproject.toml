@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "zpds-depth-cp"
-version = "0.1.1"
-description = "Error-bounded S1 compression and decompression of metric float32 depth arrays"
+version = "0.2.0"
+description = "S1/S2/S3 compression and decompression of metric float32 depth arrays"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"

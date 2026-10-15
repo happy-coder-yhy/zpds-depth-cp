@@ -8,8 +8,19 @@ from typing import Mapping
 import numpy as np
 
 
-DEPTH_STORAGE_ALPHA = 0.001
+PRECISION_PRESETS = {"S1": 0.001, "S2": 0.002, "S3": 0.003}
+DEPTH_STORAGE_ALPHA = PRECISION_PRESETS["S1"]
 DEPTH_CHUNK_FRAMES = 1
+
+
+def alpha_for_preset(preset: str) -> float:
+    if not isinstance(preset, str) or preset.upper() not in PRECISION_PRESETS:
+        raise ValueError("preset must be S1, S2 or S3")
+    return PRECISION_PRESETS[preset.upper()]
+
+
+def preset_for_alpha(alpha: float) -> str:
+    return next((name for name, value in PRECISION_PRESETS.items() if value == alpha), "custom")
 
 
 class DepthZarrWriter:
@@ -27,7 +38,8 @@ class DepthZarrWriter:
         metadata: Mapping[str, object] | None = None,
         *,
         chunk_frames: int = DEPTH_CHUNK_FRAMES,
-        alpha: float = DEPTH_STORAGE_ALPHA,
+        alpha: float | None = None,
+        preset: str | None = None,
     ) -> None:
         try:
             import zarr
@@ -48,6 +60,11 @@ class DepthZarrWriter:
             or chunk_frames < 1
         ):
             raise ValueError("chunk_frames must be a positive integer")
+
+        if alpha is not None and preset is not None:
+            raise ValueError("Specify either preset or alpha, not both")
+        if alpha is None:
+            alpha = alpha_for_preset("S1" if preset is None else preset)
 
         self.path = Path(path)
         self.height = int(height)
@@ -80,6 +97,7 @@ class DepthZarrWriter:
                 "storage_dtype": "float32",
                 "error_bound_mode": "PIECEWISE_ABS_REL",
                 "alpha": codec.alpha,
+                "preset": preset_for_alpha(codec.alpha),
                 "error_bound_m": "alpha * max(1, z) for 0 < z <= 10 m",
                 "split_depth_m": 1.0,
                 "lossy_max_depth_m": 10.0,

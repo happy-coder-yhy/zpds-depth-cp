@@ -10,7 +10,7 @@ import numpy as np
 import zarr
 
 from .codecs import DepthLogSZ3
-from .storage import DEPTH_STORAGE_ALPHA, DepthZarrWriter
+from .storage import DEPTH_STORAGE_ALPHA, DepthZarrWriter, alpha_for_preset, preset_for_alpha
 
 
 def _validate_array(array):
@@ -71,12 +71,13 @@ def _destination(source, destination):
         staged.rename(destination)
 
 
-def compress(source: str | Path, destination: str | Path) -> dict:
-    """Write S1/T1 Zarr from float32 metric NPY or Zarr. Never overwrite input.
+def compress(source: str | Path, destination: str | Path, *, preset: str = "S1") -> dict:
+    """Write T1 Zarr using the S1, S2 or S3 error tolerance.
 
     Recompressing already lossy data bounds the *additional* perturbation, not
     the error relative to the original pre-compression depth.
     """
+    alpha = alpha_for_preset(preset)
     array = open_depth(source)
     shape = _sequence_shape(array)
     metadata = {}
@@ -84,7 +85,7 @@ def compress(source: str | Path, destination: str | Path) -> dict:
         metadata = dict(zarr.open(str(source), mode="r").attrs)
     metadata["source_array_shape"] = list(array.shape)
     with _destination(source, destination) as staged:
-        with DepthZarrWriter(staged, *shape[1:], metadata=metadata) as writer:
+        with DepthZarrWriter(staged, *shape[1:], metadata=metadata, alpha=alpha) as writer:
             for frame in _frames(array):
                 writer.append(frame)
     return inspect(destination)
@@ -136,6 +137,8 @@ def inspect(path: str | Path) -> dict:
         result.update(chunks=list(array.chunks),
                       compressor=array.compressor.get_config() if array.compressor else None,
                       metadata=dict(zarr.open(str(path), mode="r").attrs))
+        if isinstance(array.compressor, DepthLogSZ3):
+            result["preset"] = preset_for_alpha(array.compressor.alpha)
     return result
 
 
@@ -165,6 +168,7 @@ def verify(source: str | Path, compressed: str | Path) -> dict:
         if error.size:
             maximum = max(maximum, float(np.max(np.where(np.isfinite(error), error, np.inf))))
     return {"passed": violations == 0 and mismatches == 0, "alpha": codec.alpha,
+            "preset": preset_for_alpha(codec.alpha),
             "s1": codec.alpha == DEPTH_STORAGE_ALPHA, "bounded_pixels": count,
             "bound_violations": violations, "exception_bit_mismatches": mismatches,
             "mean_abs_error_m": total / count if count and np.isfinite(total) else None,
