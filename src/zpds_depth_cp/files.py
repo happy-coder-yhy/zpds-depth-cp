@@ -10,7 +10,7 @@ import numpy as np
 import zarr
 
 from .codecs import DepthLogSZ3
-from .storage import DEPTH_STORAGE_ALPHA, DepthZarrWriter, alpha_for_preset, preset_for_alpha
+from .storage import DepthZarrWriter, alpha_for_preset, preset_for_alpha
 
 
 def _validate_array(array):
@@ -71,7 +71,7 @@ def _destination(source, destination):
         staged.rename(destination)
 
 
-def compress(source: str | Path, destination: str | Path, *, preset: str = "S1") -> dict:
+def compress(source: str | Path, destination: str | Path, *, preset: str = "S2") -> dict:
     """Write T1 Zarr using the S1, S2 or S3 error tolerance.
 
     Recompressing already lossy data bounds the *additional* perturbation, not
@@ -169,7 +169,7 @@ def verify(source: str | Path, compressed: str | Path) -> dict:
             maximum = max(maximum, float(np.max(np.where(np.isfinite(error), error, np.inf))))
     return {"passed": violations == 0 and mismatches == 0, "alpha": codec.alpha,
             "preset": preset_for_alpha(codec.alpha),
-            "s1": codec.alpha == DEPTH_STORAGE_ALPHA, "bounded_pixels": count,
+            "s1": codec.alpha == alpha_for_preset("S1"), "bounded_pixels": count,
             "bound_violations": violations, "exception_bit_mismatches": mismatches,
             "mean_abs_error_m": total / count if count and np.isfinite(total) else None,
             "max_abs_error_m": maximum if np.isfinite(maximum) else None}

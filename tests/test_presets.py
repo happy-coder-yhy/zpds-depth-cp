@@ -72,11 +72,11 @@ class PrecisionTests(unittest.TestCase):
                 self.assertEqual(array.compressor.get_config(), expected.get_config())
                 self.assertEqual(array.compressor.encode(self.raw[:1]), expected.encode(self.raw[:1]))
 
-    def test_default_preserves_existing_s1_encoding(self):
+    def test_default_matches_s2_encoding(self):
         target = self.root / "default.zarr"
         compress(self.source, target)
         array = zarr.open_group(str(target), mode="r")["depth"]
-        expected = DepthLogSZ3((1, 64, 80), .001)
+        expected = DepthLogSZ3((1, 64, 80), .002)
         self.assertEqual(array.compressor.encode(self.raw[:1]), expected.encode(self.raw[:1]))
 
     def test_invalid_preset_creates_no_output(self):

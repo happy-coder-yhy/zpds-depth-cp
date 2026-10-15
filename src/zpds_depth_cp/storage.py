@@ -9,7 +9,7 @@ import numpy as np
 
 
 PRECISION_PRESETS = {"S1": 0.001, "S2": 0.002, "S3": 0.003}
-DEPTH_STORAGE_ALPHA = PRECISION_PRESETS["S1"]
+DEPTH_STORAGE_ALPHA = PRECISION_PRESETS["S2"]
 DEPTH_CHUNK_FRAMES = 1
 
 
@@ -64,7 +64,7 @@ class DepthZarrWriter:
         if alpha is not None and preset is not None:
             raise ValueError("Specify either preset or alpha, not both")
         if alpha is None:
-            alpha = alpha_for_preset("S1" if preset is None else preset)
+            alpha = alpha_for_preset("S2" if preset is None else preset)
 
         self.path = Path(path)
         self.height = int(height)

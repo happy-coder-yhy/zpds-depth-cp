@@ -30,6 +30,7 @@ class DepthLogSZ3Tests(unittest.TestCase):
         data = np.tile(bits, 1024).view("<f4").reshape(1, 64, 128)
         original = data.copy().view("<u4")
         codec = DepthLogSZ3(data.shape)
+        self.assertEqual(codec.alpha, 0.002)
         result = codec.decode(codec.encode(data))
         np.testing.assert_array_equal(result.view("<u4"), original)
         np.testing.assert_array_equal(data.view("<u4"), original)
@@ -61,6 +62,7 @@ class DepthLogSZ3Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "depth.zarr"
             with DepthZarrWriter(path, 32, 40) as writer:
+                self.assertEqual(writer.storage_metadata["preset"], "S2")
                 for frame in frames:
                     writer.append(frame)
             code = (
@@ -73,7 +75,7 @@ class DepthLogSZ3Tests(unittest.TestCase):
                             str(path)], check=True)
             result = zarr.open_group(str(path), mode="r")["depth"][1:5:2, 2:7, 3:9]
             source = frames[1:5:2, 2:7, 3:9]
-            self.assertTrue((np.abs(result.astype("f8") - source) <= 0.001 * np.maximum(1, source)).all())
+            self.assertTrue((np.abs(result.astype("f8") - source) <= 0.002 * np.maximum(1, source)).all())
 
 
 if __name__ == "__main__":

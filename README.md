@@ -1,13 +1,13 @@
 # zpds-depth-cp
 
-本项目仓库为一套面向米制 float32 深度文件的解压缩工具，支持NPY和Zarr，提供S1、S2、S3三档精度，默认配置使用S1，使用CPU运行，不依赖GPU或CUDA。
+本项目仓库为一套面向米制 float32 深度文件的解压缩工具，支持NPY和Zarr，提供S1、S2、S3三档精度，默认配置使用S2，使用CPU运行，不依赖GPU或CUDA。
 
 ## 安装
 
 需要 Python 3.11+。
 
 ```bash
-python -m pip install "git+https://github.com/happy-coder-yhy/zpds-depth-cp.git@v0.2.0"
+python -m pip install "git+https://github.com/happy-coder-yhy/zpds-depth-cp.git@main"
 ```
 
 依赖 Zarr v2、Numcodecs 和 PySZ 1.0.3。PySZ 如无当前平台的 wheel，可按[官方说明](https://github.com/szcompressor/SZ3/tree/master/tools/pysz)编译安装。
@@ -17,13 +17,13 @@ python -m pip install "git+https://github.com/happy-coder-yhy/zpds-depth-cp.git@
 输入为米制 float32 数组，形状是单帧 `(H,W)` 或序列 `(T,H,W)`。具体命令行使用方法如下：
 
 ```bash
-# 使用默认S1精度压缩，保存为depth_s1.zarr
-zpds-depth-cp compress depth.npy depth_s1.zarr
+# 使用默认S2精度压缩，保存为depth_s2.zarr
+zpds-depth-cp compress depth.npy depth_s2.zarr
 ```
 
 ```bash
-# 使用S2精度压缩，通过设置--preset参数来选择精度
-zpds-depth-cp compress depth.npy depth_s2.zarr --preset S2
+# 使用S1精度压缩，通过设置--preset参数来选择精度
+zpds-depth-cp compress depth.npy depth_s1.zarr --preset S1
 ```
 
 ```bash
@@ -51,8 +51,8 @@ zpds-depth-cp verify depth.npy depth_s2.zarr
 
 | 档位 | alpha | 0 < z <= 1m | 1 < z <= 10m | 5m 处 | 10m 处 |
 |---|---:|---:|---:|---:|---:|
-| S1，默认 | 0.001 | 1mm | 0.1% × z | 5mm | 10mm |
-| S2 | 0.002 | 2mm | 0.2% × z | 10mm | 20mm |
+| S1 | 0.001 | 1mm | 0.1% × z | 5mm | 10mm |
+| S2，默认 | 0.002 | 2mm | 0.2% × z | 10mm | 20mm |
 | S3 | 0.003 | 3mm | 0.3% × z | 15mm | 30mm |
 
 S1 保留更多细节；S2、S3 放宽容限，通常能得到更小的文件。超过 10m 的值，以及零、负值、NaN、Inf，三档都逐位保留。
@@ -124,7 +124,7 @@ with DepthZarrWriter("sequence.zarr", height=650, width=800,
     writer.append(np.ones((650, 800), dtype=np.float32))
 ```
 
-Writer 默认 S1，每个块存一帧。使用 `with` 或 `close()` 写完尾块。自定义容限仍可通过 `alpha` 设置，例如 `alpha=0.0005`；`alpha` 与 `preset` 二选一。
+Writer 默认 S2，每个块存一帧。使用 `with` 或 `close()` 写完尾块。自定义容限仍可通过 `alpha` 设置，例如 `alpha=0.0005`；`alpha` 与 `preset` 二选一。
 
 ## 文件格式
 

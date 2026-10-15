@@ -17,7 +17,7 @@ def main(argv=None):
         command.add_argument("destination")
         if name == "compress":
             command.add_argument("--preset", type=str.upper, choices=PRECISION_PRESETS,
-                                 default="S1", help="Compression precision (default: S1)")
+                                 default="S2", help="Compression precision (default: S2)")
     command = commands.add_parser("inspect")
     command.add_argument("source")
     command = commands.add_parser("verify", help="Check storage error, not depth estimation accuracy")

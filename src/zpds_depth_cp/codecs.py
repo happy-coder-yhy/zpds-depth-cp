@@ -97,7 +97,7 @@ class DepthLogSZ3(Codec):
     _magic = b"CDLOGSZ1"
     _header = struct.Struct("<8sIIII")
 
-    def __init__(self, shape, alpha=0.001):
+    def __init__(self, shape, alpha=0.002):
         self.shape = tuple(shape)
         if not self.shape or any(
             isinstance(n, bool) or not isinstance(n, (int, np.integer)) or n < 1

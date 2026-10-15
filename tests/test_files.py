@@ -27,13 +27,13 @@ class FileTests(unittest.TestCase):
         np.save(path, data)
         return path, data
 
-    def test_defaults_are_s1_t1_and_source_unchanged(self):
+    def test_defaults_are_s2_t1_and_source_unchanged(self):
         source, data = self.source()
         before = source.read_bytes()
         target = self.root / "depth.zarr"
         details = compress(source, target)
-        self.assertEqual(DEPTH_STORAGE_ALPHA, 0.001)
-        self.assertEqual(details["compressor"]["alpha"], 0.001)
+        self.assertEqual(DEPTH_STORAGE_ALPHA, 0.002)
+        self.assertEqual(details["compressor"]["alpha"], 0.002)
         self.assertEqual(details["chunks"], [1, 64, 80])
         self.assertTrue(verify(source, target)["passed"])
         self.assertEqual(source.read_bytes(), before)
@@ -42,7 +42,7 @@ class FileTests(unittest.TestCase):
         restored = np.load(output)
         self.assertEqual(restored.dtype, np.dtype("<f4"))
         self.assertEqual(restored.shape, data.shape)
-        self.assertTrue((np.abs(restored.astype("f8") - data) <= .001 * np.maximum(1, data.astype("f8"))).all())
+        self.assertTrue((np.abs(restored.astype("f8") - data) <= .002 * np.maximum(1, data.astype("f8"))).all())
 
     def test_single_frame_and_big_endian(self):
         for dtype in ("<f4", ">f4"):
@@ -74,7 +74,7 @@ class FileTests(unittest.TestCase):
         target = self.root / "new.zarr"
         details = compress(source, target)
         self.assertEqual(details["metadata"]["fps"], 30)
-        self.assertEqual(details["metadata"]["alpha"], .001)
+        self.assertEqual(details["metadata"]["alpha"], .002)
         self.assertEqual(details["metadata"]["n_frames"], 2)
 
     def test_rejects_bad_dtype_shape_units_and_overwrite(self):
@@ -125,7 +125,7 @@ class FileTests(unittest.TestCase):
         target = self.root / "target.zarr"
         compress(source, target)
         zarr.open_group(str(target), mode="a").attrs["alpha"] = 1
-        self.assertEqual(verify(source, target)["alpha"], .001)
+        self.assertEqual(verify(source, target)["alpha"], .002)
         with self.assertRaises(ValueError):
             verify(source, source)
 
@@ -138,6 +138,7 @@ class FileTests(unittest.TestCase):
         result = run("compress", source, target)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(json.loads(result.stdout)["chunks"], [1, 8, 10])
+        self.assertEqual(json.loads(result.stdout)["preset"], "S2")
         result = run("verify", source, target)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue(json.loads(result.stdout)["passed"])
